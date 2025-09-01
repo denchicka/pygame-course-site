@@ -1,1 +1,17 @@
-import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='Частые ошибки'><ul><li>Нет pygame.init()</li><li>Отсутствует pygame.display.flip()</li><li>Пути к файлам</li><li>Нет mixer.init()</li></ul></Section></div>)}\n
+import React from 'react';
+import Section from '../components/Section';
+
+export default function Module() {
+  return (
+    <div className='space-y-4'>
+      <Section title='Частые ошибки'>
+        <ul>
+          <li>Нет <code>pygame.init()</code></li>
+          <li>Отсутствует <code>pygame.display.flip()</code></li>
+          <li>Пути к файлам</li>
+          <li>Нет <code>mixer.init()</code></li>
+        </ul>
+      </Section>
+    </div>
+  );
+}

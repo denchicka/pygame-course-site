@@ -1,4 +1,13 @@
-import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='Изображения'><CodeBlock language="python">{`import pygame, sys
+import React from 'react';
+import Section from '../components/Section';
+import CodeBlock from '../components/CodeBlock';
+
+export default function Module() {
+  return (
+    <div className='space-y-4'>
+      <Section title='Изображения'>
+        <CodeBlock language="python">{`
+import pygame, sys
 pygame.init()
 screen_surface = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Изображения: загрузка и трансформации')
@@ -24,4 +33,9 @@ while is_running:
     screen_surface.blit(rotated, (int(ball_position_x), int(ball_position_y)))
     pygame.display.flip()
 pygame.quit()
-sys.exit()`}</CodeBlock></Section></div>)}\n
+sys.exit()
+        `}</CodeBlock>
+      </Section>
+    </div>
+  );
+}

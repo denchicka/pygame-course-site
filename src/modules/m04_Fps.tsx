@@ -1,5 +1,14 @@
-import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='FPS и delta-time'><>
-<CodeBlock language="python">{`import pygame, sys
+import React from 'react';
+import Section from '../components/Section';
+import CodeBlock from '../components/CodeBlock';
+
+export default function Module() {
+  return (
+    <div className='space-y-4'>
+      <Section title='FPS и delta-time'>
+        <>
+          <CodeBlock language="python">{`
+import pygame, sys
 pygame.init()
 screen_surface = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('FPS и delta-time')
@@ -21,10 +30,17 @@ while is_running:
     pygame.draw.circle(screen_surface, (255, 200, 0), (int(circle_position_x), int(circle_position_y)), 20)
     pygame.display.flip()
 pygame.quit()
-sys.exit()`}</CodeBlock>
-<CodeBlock language="python">{`import math
+sys.exit()
+          `}</CodeBlock>
+          <CodeBlock language="python">{`
+import math
 angle_in_degrees: float = 45.0
 angle_in_radians: float = math.radians(angle_in_degrees)
 vector_x = math.cos(angle_in_radians)
-vector_y = math.sin(angle_in_radians)`}</CodeBlock>
-</></Section></div>)}\n
+vector_y = math.sin(angle_in_radians)
+          `}</CodeBlock>
+        </>
+      </Section>
+    </div>
+  );
+}

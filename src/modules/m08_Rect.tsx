@@ -1,4 +1,13 @@
-import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='pygame.Rect атрибуты'><CodeBlock language="python">{`import pygame, sys
+import React from 'react';
+import Section from '../components/Section';
+import CodeBlock from '../components/CodeBlock';
+
+export default function Module() {
+  return (
+    <div className='space-y-4'>
+      <Section title='pygame.Rect атрибуты'>
+        <CodeBlock language="python">{`
+import pygame, sys
 pygame.init()
 screen_surface = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Атрибуты Rect')
@@ -18,4 +27,9 @@ while is_running:
     pygame.draw.rect(screen_surface, (0, 120, 255), player_rectangle)
     pygame.display.flip()
 pygame.quit()
-sys.exit()`}</CodeBlock></Section></div>)}\n
+sys.exit()
+        `}</CodeBlock>
+      </Section>
+    </div>
+  );
+}
