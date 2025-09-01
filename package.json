@@ -1,0 +1,29 @@
+{
+  "name": "pygame-course-site",
+  "version": "0.5.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "prism-react-renderer": "^2.4.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.4",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "tailwindcss": "^3.4.9",
+    "postcss": "^8.4.41",
+    "autoprefixer": "^10.4.19",
+    "@tailwindcss/typography": "^0.5.13",
+    "gh-pages": "^6.1.1"
+  }
+}

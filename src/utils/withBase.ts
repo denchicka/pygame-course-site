@@ -1,0 +1,1 @@
+export function withBase(path:string){const b=(import.meta as any)?.env?.BASE_URL ?? '/pygame-course-site/';return `${(''+b).replace(/\/+$/,'/')}${path.replace(/^\/+/,'')}`}

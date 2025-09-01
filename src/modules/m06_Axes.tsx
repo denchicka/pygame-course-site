@@ -1,0 +1,1 @@
+import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='Оси X/Y'><p>Система координат: (0,0) — левый верх, X вправо, Y вниз.</p></Section></div>)}\n

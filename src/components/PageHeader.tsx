@@ -1,0 +1,2 @@
+import React from 'react'
+export default function PageHeader({title}:{title:string}){return(<header className='sticky top-0 z-30 backdrop-blur bg-white/70 border-b'><div className='max-w-7xl mx-auto px-4 py-3 flex items-center justify-between'><h1 className='text-xl font-semibold truncate' title={title}>{title}</h1><div className='hidden print:block text-sm text-gray-500'>Распечатанная версия</div></div></header>)}

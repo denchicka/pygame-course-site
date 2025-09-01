@@ -1,0 +1,1 @@
+import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='Итоговая шпаргалка'><p>Команды, паттерны цикла, частые рецепты PyGame.</p></Section></div>)}\n

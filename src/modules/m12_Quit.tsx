@@ -1,0 +1,1 @@
+import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='Закрытие окна'><CodeBlock language='python'>{`for event in pygame.event.get():\n    if event.type == pygame.QUIT:\n        is_running = False`}</CodeBlock></Section></div>)}\n

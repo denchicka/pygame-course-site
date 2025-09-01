@@ -1,0 +1,1 @@
+import React from 'react'\nimport Section from '../components/Section'\nimport CodeBlock from '../components/CodeBlock'\nexport default function Module(){return(<div className='space-y-4'><Section title='Спрайты и группы'><p>Sprite, Group, методы update/draw, столкновения групп.</p></Section></div>)}\n
