@@ -1,11 +1,184 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Проверка материалов - PyGame Course</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0f1220; --panel:#171a2a; --muted:#a9b1d6; --text:#e6e8ef;
+      --ok:#38c172; --bad:#ef5753; --warn:#f6ad55; --link:#7aa2f7; --border:#23263a;
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu;}
+    .wrap{max-width:980px;margin:40px auto;padding:0 20px;}
+    h1{font-size:1.8rem;margin:0 0 8px}
+    .sub{color:var(--muted);margin:0 0 24px}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px;margin:16px 0;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+    .row{display:grid;grid-template-columns:120px 1fr 160px 220px;gap:12px;align-items:center;padding:10px 12px;border-top:1px solid var(--border)}
+    .row:first-child{border-top:none}
+    .label{font-weight:600;letter-spacing:.2px}
+    .links a{color:var(--link);text-decoration:none;margin-right:14px}
+    .links a:hover{text-decoration:underline}
+    .status{font-weight:700}
+    .ok{color:var(--ok)} .bad{color:var(--bad)} .unknown{color:var(--warn)}
+    .btn{background:#20243a;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer}
+    .btn:hover{filter:brightness(1.08)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .tools{display:flex;gap:10px;flex-wrap:wrap}
+    .muted{color:var(--muted)}
+    .foot{margin-top:20px;color:var(--muted);font-size:.9rem}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--border);background:#121528;margin-left:6px;font-size:.8rem;color:var(--muted)}
+    @media (max-width:900px){.row{grid-template-columns:100px 1fr;grid-auto-rows:auto}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Проверка материалов</h1>
+  <p class="sub">Ссылки формата <code>/downloads/starter|final/mXX.zip</code>. Нажми «Проверить все» — получишь статусы 🟢/🔴.</p>
 
-<!doctype html><meta charset="utf-8">
-<title>Verify Links</title>
-<h1>Verify Downloads</h1>
-<ul>
-  <li><a href="./downloads/starter/m02.zip">starter m02</a></li>
-  <li><a href="./downloads/final/m02.zip">final m02</a></li>
-  <li><a href="./downloads/starter/m10.zip">starter m10</a></li>
-  <li><a href="./downloads/final/m10.zip">final m10</a></li>
-</ul>
-<p>Открой после деплоя: https://denchicka.github.io/pygame-course-site/verify-links.html</p>
+  <div class="tools card">
+    <button id="checkAll" class="btn">Проверить все</button>
+    <button id="reset" class="btn">Сброс статусов</button>
+    <span class="pill" id="summary">Пока ничего не проверено</span>
+  </div>
+
+  <div class="card">
+    <div class="row" style="font-weight:700;opacity:.8">
+      <div>Модуль</div>
+      <div>Ссылки</div>
+      <div>Статус</div>
+      <div>Действия</div>
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <p class="foot">Если какой-то архив подсвечен красным, проверь наличие файла в <code>/downloads/starter|final/</code> и имя <code>mXX.zip</code>.</p>
+</div>
+
+<script>
+(function(){
+  // БАЗА - абсолютный корень GitHub Pages данного проекта
+  const BASE = "https://denchicka.github.io/pygame-course-site";
+  // Набор модулей, для которых ожидаются архивы mXX.zip:
+  const MODULES = [
+    "m00","m02","m03","m04","m05","m06","m07","m08","m09",
+    "m10","m11","m12","m13","m14","m15","m16","m17"
+    // m18 добавим, когда зальются ZIP'ы
+  ];
+  const TARGETS = ["starter","final"];
+
+  const list = document.getElementById('list');
+  const checkAllBtn = document.getElementById('checkAll');
+  const resetBtn = document.getElementById('reset');
+  const summary = document.getElementById('summary');
+
+  // Рендер строк
+  const rows = [];
+  for (const mod of MODULES) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.dataset.module = mod;
+
+    const colModule = document.createElement('div');
+    colModule.className = 'label';
+    colModule.textContent = mod;
+
+    const colLinks = document.createElement('div');
+    colLinks.className = 'links';
+
+    const hrefStarter = `${BASE}/downloads/starter/${mod}.zip`;
+    const hrefFinal   = `${BASE}/downloads/final/${mod}.zip`;
+
+    const aS = document.createElement('a'); aS.href = hrefStarter; aS.target = '_blank'; aS.rel='noopener'; aS.textContent = 'starter';
+    const aF = document.createElement('a'); aF.href = hrefFinal;   aF.target = '_blank'; aF.rel='noopener'; aF.textContent = 'final';
+    colLinks.append(aS, aF);
+
+    const colStatus = document.createElement('div');
+    colStatus.className = 'status unknown';
+    colStatus.textContent = '—';
+
+    const colActions = document.createElement('div');
+    const btnS = document.createElement('button');
+    btnS.className = 'btn'; btnS.textContent = 'Проверить';
+    btnS.addEventListener('click', () => checkRow(mod));
+    const btnCopy = document.createElement('button');
+    btnCopy.className = 'btn'; btnCopy.textContent = 'Копировать ссылки';
+    btnCopy.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(`${hrefStarter}\n${hrefFinal}`);
+    });
+    colActions.append(btnS, btnCopy);
+
+    row.append(colModule, colLinks, colStatus, colActions);
+    list.append(row);
+    rows.push(row);
+  }
+
+  // Проверка HEAD с fallback на GET Range
+  async function probe(url){
+    try{
+      // 1) HEAD
+      const rHead = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+      if (rHead.ok) return {ok:true, code:rHead.status};
+      // 2) GET с частичным чтением (некоторые CDN не любят HEAD)
+      const rGet = await fetch(url, { method:'GET', headers:{'Range':'bytes=0-0'}, cache:'no-store' });
+      if (rGet.ok || rGet.status === 206) return {ok:true, code:rGet.status};
+      return {ok:false, code:rGet.status};
+    }catch(err){
+      return {ok:false, code:0, err};
+    }
+  }
+
+  function setStatusEl(el, okText, badText, resS, resF){
+    const bothOk = resS.ok && resF.ok;
+    el.className = 'status ' + (bothOk ? 'ok' : 'bad');
+    const codeS = resS.code || '—';
+    const codeF = resF.code || '—';
+    el.textContent = bothOk ? `${okText} (S:${codeS} F:${codeF})` : `${badText} (S:${codeS} F:${codeF})`;
+  }
+
+  async function checkRow(mod){
+    const row = rows.find(r => r.dataset.module === mod);
+    const statusEl = row.children[2];
+    statusEl.className = 'status unknown';
+    statusEl.textContent = '...';
+
+    const urlS = `${BASE}/downloads/starter/${mod}.zip`;
+    const urlF = `${BASE}/downloads/final/${mod}.zip`;
+    const [resS, resF] = await Promise.all([probe(urlS), probe(urlF)]);
+    setStatusEl(statusEl, '🟢 OK', '🔴 Нет файла', resS, resF);
+    updateSummary();
+  }
+
+  async function checkAll(){
+    checkAllBtn.disabled = true;
+    let i = 0;
+    for (const mod of MODULES){
+      await checkRow(mod);
+      i++;
+      summary.textContent = `Проверено ${i}/${MODULES.length}`;
+    }
+    checkAllBtn.disabled = false;
+  }
+
+  function resetAll(){
+    rows.forEach(r => { const s = r.children[2]; s.className='status unknown'; s.textContent='—'; });
+    summary.textContent = 'Пока ничего не проверено';
+  }
+
+  function updateSummary(){
+    const s = { ok:0, bad:0, unknown:0 };
+    rows.forEach(r=>{
+      const cls = r.children[2].className;
+      if (cls.includes('ok')) s.ok++;
+      else if (cls.includes('bad')) s.bad++;
+      else s.unknown++;
+    });
+    summary.textContent = `OK: ${s.ok} • Ошибок: ${s.bad} • ? ${s.unknown}`;
+  }
+
+  checkAllBtn.addEventListener('click', checkAll);
+  resetBtn.addEventListener('click', resetAll);
+})();
+</script>
+</body>
+</html>
